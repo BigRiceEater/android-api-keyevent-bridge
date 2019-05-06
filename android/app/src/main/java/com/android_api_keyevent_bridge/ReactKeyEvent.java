@@ -29,10 +29,15 @@ public class ReactKeyEvent extends ReactContextBaseJavaModule {
     }
 
     private DeviceEventManagerModule.RCTDeviceEventEmitter getEmitter(){
+        if (_emitter != null){
+            return _emitter;
+        }
+
         if (_reactContext.hasActiveCatalystInstance()){
             // getJSModule causes problems when the rn instance is not fully initialized yet
             // how to receive event rn is now available ? 
-            return _reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class);
+            _emitter = _reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class);
+            return _emitter;
         }
         else 
             return null;
