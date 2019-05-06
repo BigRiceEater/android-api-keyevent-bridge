@@ -1,7 +1,15 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, Button, NativeModules } from 'react-native';
+import {DeviceEventEmitter } from 'react-native'
 
 export default class App extends Component {
+  
+  componentDidMount(){
+    this.subscription = DeviceEventEmitter.addListener('onKeyDown', (event) => {
+      console.log(event)
+    })
+  }
+
   render() {
     return (
       <View style={styles.container}>
