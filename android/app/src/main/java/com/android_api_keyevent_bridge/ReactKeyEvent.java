@@ -8,6 +8,9 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.bridge.WritableMap;
+
 
 import android.view.KeyEvent;
 
@@ -22,15 +25,18 @@ public class ReactKeyEvent extends ReactContextBaseJavaModule {
     public ReactKeyEvent(ReactApplicationContext reactContext) {
         super(reactContext);
         _reactContext = reactContext;
-        if (_reactContext.hasActiveCatalystInstance()){
-            // getJSModule causes problems when the rn instance is not fully initialized yet
-            // how to receive event rn is now available ? 
-            _emitter = _reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class);
-        }
         _this = this;
     }
 
-
+    private DeviceEventManagerModule.RCTDeviceEventEmitter getEmitter(){
+        if (_reactContext.hasActiveCatalystInstance()){
+            // getJSModule causes problems when the rn instance is not fully initialized yet
+            // how to receive event rn is now available ? 
+            return _reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class);
+        }
+        else 
+            return null;
+    }
 
     public static ReactKeyEvent instance(){
         return _this;
@@ -47,8 +53,16 @@ public class ReactKeyEvent extends ReactContextBaseJavaModule {
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event){
-        if (_emitter != null)
-            _emitter.emit(KEY_DOWN_EVENT, "params here");
-        return true;
+        // try {
+            WritableMap params = new WritableNativeMap();
+            char pressedKey = (char) event.getUnicodeChar();
+            params.putString("pressedKey", String.valueOf(pressedKey));
+
+            getEmitter().emit(KEY_DOWN_EVENT, params);
+        // } catch(Exception e){
+
+        // } finally {
+         return true;
+        // }
     } 
 }

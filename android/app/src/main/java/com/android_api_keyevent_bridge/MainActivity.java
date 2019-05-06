@@ -14,10 +14,9 @@ public class MainActivity extends ReactActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event){
-        // ReactKeyEvent reactKeyEvent = ReactKeyEvent.instance();
-        // if (reactKeyEvent != null)
-        //     return reactKeyEvent.onKeyDown(keyCode, event);
-        // else return true;
-        return true;
+        ReactKeyEvent reactKeyEvent = ReactKeyEvent.instance();
+        if (reactKeyEvent != null)
+            return reactKeyEvent.onKeyDown(keyCode, event);
+        else return true;
     }
 }
